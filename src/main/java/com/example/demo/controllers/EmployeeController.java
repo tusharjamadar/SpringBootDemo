@@ -31,13 +31,13 @@ public class EmployeeController {
     public ResponseEntity<EmployeeDTO> getEmployeeById(@PathVariable(name = "employeeId") Long Id){
         EmployeeDTO employeeDTO = employeeService.getEmployeeById(Id);
         if(employeeDTO == null){
-            throw new ResourceNotFoundException("Employee wiht ID "+ Id + " not found.");
+            throw new ResourceNotFoundException("Employee with ID "+ Id + " not found.");
         }
         return ResponseEntity.ok(employeeDTO);
     }
 
     @GetMapping
-    @Operation(summary = "Sort employee by ID", description = "Returns user details by given ID")
+    @Operation(summary = "Get All Employee", description = "Returns user details by given ID")
     public ResponseEntity<List<EmployeeDTO>> getAllEmployee(@RequestParam(required = false, name = "age") Integer inputAge, @RequestParam(required = false, name = "sortBy") String sortBy ){
         return ResponseEntity.ok(employeeService.getAllEmployee());
     }
@@ -51,7 +51,7 @@ public class EmployeeController {
 
     @PutMapping(path = "/{employeeId}")
     @Operation(summary = "Update Employee", description = "This API used to update the employee")
-    public ResponseEntity<EmployeeDTO> updateEmployeeById(@RequestBody EmployeeDTO employee, @PathVariable Long employeeId){
+    public ResponseEntity<EmployeeDTO> updateEmployeeById(@RequestBody @Valid EmployeeDTO employee, @PathVariable Long employeeId){
         EmployeeDTO employeeDTO = employeeService.updateEmployeeById(employeeId, employee);
         if(employeeDTO == null)return ResponseEntity.notFound().build();
         return ResponseEntity.ok(employeeDTO);
@@ -66,10 +66,12 @@ public class EmployeeController {
     }
 
     @PatchMapping(path = "/{employeeId}")
-    @Operation(summary = "Udpate Field of Employee", description = "This API used to Udpate Field of Employee")
+    @Operation(summary = "Update Field of Employee", description = "This API used to Update Field of Employee")
     public ResponseEntity<EmployeeDTO> updateEmployee(@RequestBody Map<String, Object> updates, @PathVariable Long employeeId){
         EmployeeDTO employeeDTO = employeeService.updateEmployee(employeeId, updates);
-        if(employeeDTO == null)return ResponseEntity.notFound().build();
+        if(employeeDTO == null){
+            throw new ResourceNotFoundException("Employee with ID "+ employeeId + " not found.");
+        }
         return ResponseEntity.ok(employeeDTO);
     }
 }

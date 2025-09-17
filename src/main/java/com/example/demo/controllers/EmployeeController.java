@@ -1,9 +1,11 @@
 package com.example.demo.controllers;
 
 import com.example.demo.dto.EmployeeDTO;
+import com.example.demo.exceptions.ResourceNotFoundException;
 import com.example.demo.services.EmployeeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/api/employees")
@@ -27,7 +30,9 @@ public class EmployeeController {
     @Operation(summary = "Get employee by ID", description = "Returns user details by given ID")
     public ResponseEntity<EmployeeDTO> getEmployeeById(@PathVariable(name = "employeeId") Long Id){
         EmployeeDTO employeeDTO = employeeService.getEmployeeById(Id);
-        if(employeeDTO == null)return ResponseEntity.notFound().build();
+        if(employeeDTO == null){
+            throw new ResourceNotFoundException("Employee wiht ID "+ Id + " not found.");
+        }
         return ResponseEntity.ok(employeeDTO);
     }
 
@@ -39,7 +44,7 @@ public class EmployeeController {
 
     @PostMapping
     @Operation(summary = "Create new Employee", description = "This is test api used for creating new Employee")
-    public ResponseEntity<EmployeeDTO> createEmployee(@RequestBody EmployeeDTO employee){
+    public ResponseEntity<EmployeeDTO> createEmployee(@RequestBody @Valid EmployeeDTO employee){
         EmployeeDTO employeeDTO = employeeService.createEmployee(employee);
         return new ResponseEntity<>(employeeDTO, HttpStatus.CREATED);
     }

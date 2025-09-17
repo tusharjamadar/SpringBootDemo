@@ -1,6 +1,11 @@
 package com.example.demo.dto;
 
+import com.example.demo.annotations.EmployeeRoleValidation;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,11 +18,17 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class EmployeeDTO {
-    Long id;
-    String name;
-    String email;
-    Integer age;
-    LocalDate dob;
+    private Long id;
+    @NotNull(message = "Please provide the name of employee.")
+    private String name;
+    @Email(message = "Email should be valid")
+    private String email;
+    private Integer age;
+    private LocalDate dob;
+    @NotBlank(message = "Role should not be blank")
+//    @Pattern(regexp = "^(ADMIN|USER)$", message = "Role of Employee can either be USER or ADMIN")
+    @EmployeeRoleValidation
+    private String role;
     @JsonProperty("isActive")
-    Boolean isActive;
+    private Boolean isActive;
 }

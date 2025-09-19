@@ -1,6 +1,8 @@
 package com.example.demo.services;
 
+import com.example.demo.dto.DepartmentDTO;
 import com.example.demo.dto.EmployeeDTO;
+import com.example.demo.entities.DepartmentEntity;
 import com.example.demo.entities.EmployeeEntity;
 import com.example.demo.repositories.EmployeeRepository;
 import org.modelmapper.ModelMapper;
